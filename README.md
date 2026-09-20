@@ -21,19 +21,39 @@ This project focuses on **evaluating RAG systems layer by layer**, making it eas
 The project follows a progressive evaluation strategy:
 
 ```text
-                    RAG EVALUATION
-                          │
-          ┌───────────────┴───────────────┐
-          │                               │
-     Component-Level                 Application-Level
-          │                               │
-     ┌────┴────┐                    ┌─────┴─────┐
-     │         │                    │           │
- Retriever  Generator          Quality      Security
-     │         │                    │           │
- Precision  Faithfulness       Correctness  Toxicity
- Recall     Relevancy          Completeness Leakage
-                               Style        Scope
+                                             RAG EVALUATION
+                              │
+             ┌────────────────┴────────────────┐
+             │                                 │
+      OFFLINE EVALUATION                PRODUCTION EVALUATION
+             │                                 │
+     ┌───────┴────────┐                 ┌──────┴───────┐
+     │                │                 │              │
+ COMPONENT-LEVEL  APPLICATION-LEVEL  OPERATIONAL   ONLINE EVALUATION
+     │                │                 │              │
+ ┌───┼────┐       ┌───┴────┐        ┌───┼────┐    LangSmith
+ │   │    │       │        │        │   │    │       │
+ ▼   ▼    ▼       ▼        ▼        ▼   ▼    ▼       ▼
+Retr Gen Pipeline Quality Security Cost Token Latency  Real User
+ │   │      │       │        │       │    │      │     Traces
+ │   │      │       │        │       │    │      │       │
+ ▼   ▼      ▼       ▼        ▼       └────┴──────┘       ▼
+Prec Faith Context Correct Toxicity       │       ┌───────────────┐
+Recall Rel. Relevancy Complete Leakage     │       │ Online Metrics│
+             Faithfulness Style Scope     │       │ Quality +     │
+             Answer Relevancy Adherence   │       │ Performance   │
+                                          │       └───────┬───────┘
+                                          │               ▼
+                                          │       LangSmith Dashboard
+                                          │               │
+                                          │        ┌──────┴──────┐
+                                          │        │             │
+                                          ▼        ▼             ▼
+                                   REGRESSION   Monitor       Improve
+                                   TESTING        │             │
+                                      │           └──────┬──────┘
+                                      │                  │
+                                      └──── Re-evaluate ─┘
 ```
 
 ### 📌 Five Evaluation Stages
