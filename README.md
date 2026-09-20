@@ -51,53 +51,122 @@ The project follows a progressive evaluation strategy:
 # 🏗️ System Architecture
 
 ```text
-                         ┌─────────────────┐
-                         │    User Query   │
-                         └────────┬────────┘
-                                  │
-                                  ▼
-                         ┌─────────────────┐
-                         │    Retriever    │
-                         │                 │
-                         │ Vector Search   │
-                         │ + Retrieval     │
-                         └────────┬────────┘
-                                  │
-                                  ▼
-                         ┌─────────────────┐
-                         │ Retrieved       │
-                         │ Context        │
-                         └────────┬────────┘
-                                  │
-                                  ▼
-                         ┌─────────────────┐
-                         │    Generator    │
-                         │                 │
-                         │     LLM         │
-                         └────────┬────────┘
-                                  │
-                                  ▼
-                         ┌─────────────────┐
-                         │ Final Response  │
-                         └────────┬────────┘
-                                  │
-                 ┌────────────────┼────────────────┐
-                 │                │                │
-                 ▼                ▼                ▼
-            Retriever         Pipeline        Application
-            Evaluation       Evaluation        Evaluation
-                 │                │                │
-                 ▼                ▼                ▼
-            Precision/       Relevancy/       Correctness/
-            Recall           Faithfulness     Completeness/
-                                               Style
-                                                  │
-                                                  ▼
-                                           Security & Safety
-                                                  │
-                                     ┌────────────┼────────────┐
-                                     ▼            ▼            ▼
-                                  Toxicity     Leakage      Scope
+                                              ┌──────────────────────────┐
+                         │        USER QUERY        │
+                         └────────────┬─────────────┘
+                                      │
+                                      ▼
+                         ┌──────────────────────────┐
+                         │       RAG PIPELINE        │
+                         │                          │
+                         │  Query → Retriever       │
+                         │          ↓               │
+                         │   Retrieved Context      │
+                         │          ↓               │
+                         │      LLM / Generator     │
+                         │          ↓               │
+                         │     Final Response       │
+                         └────────────┬─────────────┘
+                                      │
+                    ┌─────────────────┼─────────────────┐
+                    │                 │                 │
+                    ▼                 ▼                 ▼
+          ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
+          │    RETRIEVER    │ │    GENERATOR    │ │    PIPELINE     │
+          │    EVALUATION   │ │    EVALUATION   │ │    EVALUATION   │
+          │                 │ │                 │ │                 │
+          │ • Precision     │ │ • Faithfulness  │ │ • Contextual    │
+          │ • Recall        │ │ • Answer        │ │   Relevancy     │
+          │                 │ │   Relevancy     │ │ • Faithfulness  │
+          └────────┬────────┘ └────────┬────────┘ │ • Answer        │
+                   │                   │          │   Relevancy     │
+                   │                   │          └────────┬────────┘
+                   └───────────────────┼───────────────────┘
+                                       │
+                                       ▼
+                         ┌──────────────────────────┐
+                         │   APPLICATION EVALUATION │
+                         │                          │
+                         │ • Correctness            │
+                         │ • Completeness           │
+                         │ • Style                  │
+                         └────────────┬─────────────┘
+                                      │
+                                      ▼
+                         ┌──────────────────────────┐
+                         │    SECURITY & SAFETY     │
+                         │                          │
+                         │ • Toxicity               │
+                         │ • Information Leakage    │
+                         │ • Scope Adherence        │
+                         └────────────┬─────────────┘
+                                      │
+                                      ▼
+                         ┌──────────────────────────┐
+                         │    REGRESSION TESTING    │
+                         │                          │
+                         │ Compare with Previous   │
+                         │ Evaluation Runs          │
+                         │                          │
+                         │ • Detect Quality Drops   │
+                         │ • Detect New Failures    │
+                         │ • Pass / Fail            │
+                         └────────────┬─────────────┘
+                                      │
+                                      ▼
+                         ┌──────────────────────────┐
+                         │  OPERATIONAL EVALUATION  │
+                         │                          │
+                         │ • Latency                │
+                         │ • Token Usage            │
+                         │ • LLM / Inference Cost   │
+                         └────────────┬─────────────┘
+                                      │
+                                      ▼
+                    ╔════════════════════════════════════╗
+                    ║       PRODUCTION DEPLOYMENT        ║
+                    ╚══════════════════╤═════════════════╝
+                                       │
+                                       ▼
+                         ┌──────────────────────────┐
+                         │    REAL USER QUERIES     │
+                         └────────────┬─────────────┘
+                                      │
+                                      ▼
+                         ┌──────────────────────────┐
+                         │   LANGSMITH TRACING      │
+                         │                          │
+                         │ • Inputs / Outputs       │
+                         │ • Retrieval Traces       │
+                         │ • LLM Calls              │
+                         │ • Tokens / Cost          │
+                         │ • Latency                │
+                         └────────────┬─────────────┘
+                                      │
+                                      ▼
+                         ┌──────────────────────────┐
+                         │    ONLINE EVALUATION     │
+                         │                          │
+                         │ Same Quality Metrics     │
+                         │ + Operational Metrics    │
+                         │ on Production Traces     │
+                         └────────────┬─────────────┘
+                                      │
+                                      ▼
+                         ┌──────────────────────────┐
+                         │    LANGSMITH DASHBOARD   │
+                         │                          │
+                         │ Quality │ Cost │ Tokens  │
+                         │ Latency │ Errors │ Trends│
+                         └────────────┬─────────────┘
+                                      │
+                                      ▼
+                         ┌──────────────────────────┐
+                         │   MONITOR & IMPROVE      │
+                         │                          │
+                         │ Detect → Analyze → Fix   │
+                         │ → Re-evaluate → Repeat   │
+                         └──────────────────────────┘
 ```
 
 ---
