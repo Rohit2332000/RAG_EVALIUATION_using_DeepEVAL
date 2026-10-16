@@ -15,6 +15,18 @@ A RAG application can fail at multiple layers:
 This project focuses on **evaluating RAG systems layer by layer**, making it easier to identify *where* an AI system is failing and *what* needs to be improved.
 
 ---
+<img width="1560" height="735" alt="Screenshot_17-10-2026_14152_www youtube com" src="https://github.com/user-attachments/assets/90a9fde6-d71f-4b6c-a3b9-9496b0f8217c" />
+
+
+
+<img width="1307" height="576" alt="Screenshot_17-10-2026_14230_www youtube com" src="https://github.com/user-attachments/assets/8a9e1df7-cf25-4f17-81e0-b7d63813141b" />
+
+
+<img width="1200" height="823" alt="Screenshot_17-10-2026_14317_www youtube com" src="https://github.com/user-attachments/assets/133f5aa4-4a50-457a-8d35-6cf6afa6980c" />
+
+
+
+
 
 ## 🚀 Evaluation Journey
 
